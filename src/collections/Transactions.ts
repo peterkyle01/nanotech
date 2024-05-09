@@ -1,6 +1,7 @@
-import Test from '@/components/test'
 import type { CollectionConfig } from 'payload/types'
 import { Products } from './Products'
+import { Suppliers } from './Suppliers'
+import { Customer } from './Customers'
 
 export const Transactions: CollectionConfig = {
   slug: 'transactions',
@@ -8,7 +9,7 @@ export const Transactions: CollectionConfig = {
     {
       type: 'row',
       fields: [
-        { name: 'Product', type: 'relationship', relationTo: Products.slug },
+        { name: 'User', type: 'relationship', relationTo: [Suppliers.slug, Customer.slug] },
         {
           name: 'Transaction Type',
           type: 'select',
@@ -16,11 +17,20 @@ export const Transactions: CollectionConfig = {
           options: [
             { label: 'Sale', value: 'sale' },
             { label: 'Restock', value: 'restock' },
-            { label: 'Return', value: 'return' },
           ],
         },
       ],
     },
-    { name: 'Quantity Change', type: 'number', min: -100, max: 100 },
+    {
+      type: 'row',
+      fields: [
+        { name: 'Product', type: 'relationship', relationTo: Products.slug },
+        { name: 'Quantity', type: 'number', min: 1, max: 50 },
+      ],
+    },
+    {
+      name: 'Total',
+      type: 'number',
+    },
   ],
 }

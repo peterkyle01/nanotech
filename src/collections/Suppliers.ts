@@ -17,39 +17,7 @@ export const Suppliers: CollectionConfig = {
       type: 'row',
       fields: [
         { name: 'Email', type: 'text' },
-        {
-          name: 'Category',
-          type: 'select',
-          defaultValue: 'smartphone',
-          options: [
-            {
-              label: 'Smart Phone',
-              value: 'smartphone',
-            },
-            {
-              label: 'PC & Laptop',
-              value: 'pc_and_laptop',
-            },
-            {
-              label: 'Tablet',
-              value: 'tablet',
-            },
-            {
-              label: 'Smart Watch',
-              value: 'smartwatch',
-            },
-            {
-              label: 'TV & FlatScreen',
-              value: 'tv_and_flatscreen',
-            },
-          ],
-        },
-        {
-          name: 'Quantity',
-          type: 'number',
-          min: 10,
-          max: 100,
-        },
+        { name: 'Address', type: 'text' },
       ],
     },
   ],
