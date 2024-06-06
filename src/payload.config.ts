@@ -1,12 +1,11 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 // import { payloadCloud } from '@payloadcms/plugin-cloud'
-import { cloudStorage } from '@payloadcms/plugin-cloud-storage'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload/config'
 // import sharp from 'sharp'
 import { fileURLToPath } from 'url'
-import { azureBlobStorageAdapter } from '@payloadcms/plugin-cloud-storage/azure'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -21,12 +20,6 @@ import Dashboard from './components/shared/dashboard'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-const adapter = azureBlobStorageAdapter({
-  connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING as string,
-  containerName: process.env.AZURE_STORAGE_CONTAINER_NAME as string,
-  allowContainerCreate: process.env.AZURE_STORAGE_ALLOW_CONTAINER_CREATE === 'true',
-  baseURL: process.env.AZURE_STORAGE_ACCOUNT_BASEURL as string,
-})
 
 export default buildConfig({
   admin: {
@@ -52,20 +45,25 @@ export default buildConfig({
   editor: lexicalEditor({}),
   // plugins: [payloadCloud()], // TODO: Re-enable when cloud supports 3.0
   plugins: [
-    cloudStorage({
+    s3Storage({
       collections: {
-        [Media.slug]: {
-          adapter,
-          //  vercelBlobAdapter({
-          //   token: process.env.BLOB_READ_WRITE_TOKEN || '',
-          //   storeId: process.env.BLOB_STORE_ID || '',
-          // }),
-          disableLocalStorage: true,
-          disablePayloadAccessControl: true,
+        media: {
+          prefix: 'media',
         },
+      },
+      bucket: process.env.S3_BUCKET!,
+      config: {
+        forcePathStyle: true,
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+        },
+        region: process.env.S3_REGION,
+        endpoint: process.env.S3_ENDPOINT,
       },
     }),
   ],
+
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

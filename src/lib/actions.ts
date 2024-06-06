@@ -1,11 +1,9 @@
 'use server'
 
-import { unstable_noStore as noStore } from 'next/cache'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 export async function getTotalRevenue() {
-  noStore()
   const payload = await getPayload({
     config: configPromise,
   })
@@ -16,7 +14,6 @@ export async function getTotalRevenue() {
 }
 
 export async function getTotalRestock() {
-  noStore()
   const payload = await getPayload({
     config: configPromise,
   })
@@ -32,7 +29,6 @@ export async function getTotalRestock() {
 }
 
 export async function getTotalSales() {
-  noStore()
   const payload = await getPayload({
     config: configPromise,
   })
@@ -48,12 +44,11 @@ export async function getTotalSales() {
 }
 
 export async function getTotalProducts() {
-  noStore()
   const payload = await getPayload({
     config: configPromise,
   })
   const { docs } = await payload.find({
     collection: 'products',
   })
-  return docs.length
+  return docs.reduce((sum, value) => sum + Number(value.Quantity!), 0)
 }

@@ -13,6 +13,7 @@ export const PurchaseOrderHook: CollectionAfterChangeHook = async ({
     })
     try {
       await req.payload.create({
+        req,
         collection: 'transactions',
         data: {
           'Transaction Type': 'restock',

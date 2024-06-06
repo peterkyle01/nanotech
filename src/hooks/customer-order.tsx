@@ -14,6 +14,7 @@ export const CustomerOrderHook: CollectionAfterChangeHook = async ({
     })
     try {
       await req.payload.create({
+        req,
         collection: 'transactions',
         data: {
           'Transaction Type': 'sale',
@@ -32,19 +33,6 @@ export const CustomerOrderHook: CollectionAfterChangeHook = async ({
           ...total,
           Quantity: remainingProducts,
         })
-        await req.payload.update({
-          collection: 'products',
-          id: doc.Name,
-          data: {
-            '1pcPrice': total['1pcPrice'],
-            Category: total.Category,
-            Name: total.Name,
-            Description: total.Description,
-            'Product Image': total['Product Image'],
-            Quantity: remainingProducts,
-          },
-        })
-        console.log('done')
       }
     } catch (error) {
       console.log(`Create Transaction: An error ${error} occured!`)
